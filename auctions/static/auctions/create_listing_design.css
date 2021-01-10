@@ -1,0 +1,121 @@
+.create-list-holder {
+    margin: auto;
+    width: 50%;
+}
+form {
+    margin-top: 5em;
+    margin-bottom: 5em;
+
+}
+.col-4 {
+    width: 100%;
+    margin-top: 10px;
+    position: relative;
+    margin-bottom:10px ;
+
+}
+.input-box {
+    background: #F0F2F5;
+    border: none;
+
+}
+.bid-holder {
+    display: flex;
+    justify-content: space-between;
+    background: #F0F2F5;
+    width: 590px;
+    height: 200px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+.col-5 {
+    width: 16%;
+    margin-top: 10px;
+    position: absolute;
+    margin-bottom:10px ;
+
+}
+.warning-text {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 32px;
+    letter-spacing: 0.025em;
+    color: #CACACA;
+
+}
+.ask-amount {
+    margin: 30px;
+}
+
+/* Reset Select */
+.Select-category {
+    margin: 38px 30px 0px 0px;
+
+}
+select {
+    appearance: none;
+    outline: 0;
+    box-shadow: none;
+    border: 0 !important;
+    background-image: none;
+    font-weight: bold;
+    font-size: 16px;
+
+}
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+/* Custom Select */
+.select {
+  position: relative;
+  display: flex;
+  width: 9em;
+  height: 3em;
+  line-height: 3;
+  background: #004867;
+  overflow: hidden;
+  border-radius: .25em;
+}
+select {
+  flex: 1;
+  padding: 0 .5em;
+  color:  #ffffff;
+  cursor: pointer;
+}
+/* Arrow */
+.select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  background: #DEDEDE;
+  cursor: pointer;
+  pointer-events: none;
+  -webkit-transition: .25s all ease;
+  -o-transition: .25s all ease;
+  transition: .25s all ease;
+}
+/* Transition */
+.select:hover::after {
+  color: #0156A5;
+}
+
+.text-box {
+    resize: none;
+    width: 958px;
+    height: 350px;
+}
+.image-holder {
+    margin-bottom: 20px;
+}
+
+::placeholder {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
+    letter-spacing: 0.025em;
+    color: #CACACA;
+}

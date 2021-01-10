@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Log in{% endblock %}</title>
+    <link href="{% static '/auctions/register.css' %}" rel="stylesheet" >
+
+</head>
+<body>
+    <header class="head-image">
+        <div class="head-text">
+            <a href="{% url 'index' %}" class="head-link">Auctions</a>
+        </div>
+    </header>
+	<div class="form-body">
+		<div class="container" id="form-box">
+            <div class="form-container sign-up-container">
+				<form action="{% url 'register' %}" method="post">
+                    {% csrf_token %}
+					<h1 style="margin-bottom: 0.5em;">Create Account</h1>
+					<div class="form-holder">
+    	                <input type="text" name="username" placeholder="Username" autocomplete="off" required>
+                         <small class="error-msg">
+                            {{ msgUsernameError }}
+                        </small>
+					    <input type="email" name="email" placeholder="Email Address" autocomplete="off" required>
+					    <input type="password" name="password" placeholder="Password" required>
+                        <input type="password" name="confirmation" placeholder="Confirm Password" required>
+                         <small class="error-msg">
+                             {{ msgPasswordError }}
+                        </small>
+                        <br>
+    	            </div>
+					<button>Sign Up</button>
+				</form>
+			</div>
+			<div class="form-container log-in-container">
+				<form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+					<h1 style="margin-bottom: 0.5em;">Log in</h1>
+                     <small class="error-msg">
+                            {{ message }}
+                    </small>
+    	            <div class="fom-holder">
+    	                <input type="text" name="username" placeholder="Username" autocomplete="off" required>
+                        <input type="password" name="password" placeholder="Password" required>
+    	            </div>
+					<a class="forget-link" href="#">Forgot your password?</a>
+					<button>Log in</button>
+				</form>
+			</div>
+			<div class="overlay-container">
+				<div class="overlay">
+					<div class="overlay-panel overlay-left">
+						<h1>Welcome Back!</h1>
+						<p>If you have an account log in here</p>
+						<button class="panel" id="register">Sign Up</button>
+					</div>
+					<div class="overlay-panel overlay-right">
+						<h1>Sign Up here</h1>
+						<p>Don't have an account? </p>
+                        <button class="panel" id="login">Log in</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <script>
+        const LoginButton = document.getElementById('login');
+        const signUpButton = document.getElementById('register');
+        const container = document.getElementById('form-box');
+
+        LoginButton.addEventListener('click', () => {
+	    container.classList.add("right-panel-active");
+        });
+
+        signUpButton.addEventListener('click', () => {
+	    container.classList.remove("right-panel-active");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+{% load static %}
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create List</title>
+    <link href="{% static '/auctions/productDetail.css' %}" rel="stylesheet" >
+    <link href="{% static '/auctions/create_listing_design.css' %}" rel="stylesheet" >
+</head>
+<body>
+     <header class="nav-bg">
+        <a class="logo" href="{% url 'index' %}">Auctions</a>
+        <nav>
+            <ul class="nav_links">
+                 {% if user.is_authenticated %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#">Watchlist</a>
+                     </li>
+                    {% else %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
+                     </li>
+                 {% endif %}
+                 <a class="square_btn" href="{% url 'createList' %}">Create Listing</a>
+            </ul>
+        </nav>
+    </header>
+    <form action="{% url 'createList' %}" method="post">
+        {% csrf_token %}
+        <div class="create-list-holder">
+            <div class="tile-holder col-4">
+                {{ form.Title }}
+                 <span class="focus-border">
+                    <i></i>
+                </span>
+            </div>
+            <div class="image-holder">
+                <div class="col-4">
+                    {{ form.itemImage }}
+                    <span class="focus-border">
+                        <i></i>
+                    </span>
+                </div>
+            </div>
+            <div class="description-holder">
+                <div class="col-4">
+                    {{ form.Descriptions }}
+                    <span class="focus-border">
+                        <i></i>
+                    </span>
+                </div>
+            </div>
+            <div class="bid-holder">
+                <div class="ask-amount">
+                    <div class="bid-warning">
+                        <span class="warning-text"  >
+                            Put your starting bid here
+                        </span>
+                    </div>
+                    <div class="col-5">
+                        {{ form.startingBid }}
+                        <span class="focus-border">
+                            <i></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="Select-category">
+                    <div class="select">
+                        {{ form.category }}
+                    </div>
+                </div>
+            </div>
+            <button class="btn-cta Placebid">Create Listing</button>
+        </div>
+    </form>
+</body>
+</html>

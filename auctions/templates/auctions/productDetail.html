@@ -1,0 +1,145 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auctions</title>
+    <link href="{% static '/auctions/productDetail.css' %}" rel="stylesheet" >
+</head>
+<body>
+    <header class="nav-bg">
+        <a class="logo" href="{% url 'index' %}">Auctions</a>
+        <nav>
+            <ul class="nav_links">
+                 {% if user.is_authenticated %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'get_watchlist' %}">Watchlist</a>
+                     </li>
+                    {% else %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
+                     </li>
+                 {% endif %}
+                 <a class="square_btn" href="{% url 'createList' %}">Create Listing</a>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="tileHolder">
+            <h1 class="productTitle">{{ product.Title }}</h1>
+        </div>
+        <div style="position: relative;">
+            <img src="{{ product.itemImage }}" class="product-view" alt="product image">
+        </div>
+        <h2 class="product-tag">Product Description</h2>
+        <div class="product-description">
+            <p>{{ product.Descriptions }}</p>
+        </div>
+        <div class="bid">
+            {% if product.currentBid is None %}
+                <div class="bid-price"><span class="bid">Starting Bid</span> ${{ product.startingBid| floatformat:'0' }}</div>
+            {% elif product.buyer is not None %}
+                {% if product.Seller == user %}
+                    <p class="seller-text">
+                        You've sold this item to {{ product.buyer |title }} for {{ product.currentBid| floatformat:'0' }}
+                    </p>
+                {% elif product.buyer == user %}
+                    <p class="winner-text">You've won this auction!</p>
+                {% else %}
+                    <p class="seller-text">This item is already sold</p>
+                {% endif %}
+            {% else %}
+                <div class="bid-price"><span class="bid">Current Bid</span> ${{ product.currentBid| floatformat:'0' }}</div>
+            {% endif %}
+            {% if error_min_value %}
+                <p class="card-text">
+                    {% if product.currentBid %}
+                        <div class="alert alert-warning" role="alert">
+                            Your bid must be bigger than {{ product.currentBid| floatformat:'0'}}
+                        </div>
+                    {% endif %}
+                </p>
+            {% endif %}
+            {% if product.Seller != user %}
+                <form action="{% url 'take_bid' product.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="col-3">
+                        {{ NewBidForm }}
+                        <span class="focus-border">
+                            <i></i>
+                        </span>
+                    </div>
+                    <div class="btn-holder">
+                        <button class="btn-cta Placebid btn-pos">Place Bid</button>
+                    </div>
+                </form>
+                {% if is_added  %}
+                    <a href="{% url 'watchlist_add' product.id %}" >
+                        <button class="btn-cta Placebid">Remove to Watchlist</button>
+                    </a>
+                {% else %}
+                    <a href="{% url 'watchlist_add' product.id %}" >
+                        <button class="btn-cta Placebid">Add to Watchlist</button>
+                    </a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'close_listing' product.id %}" >
+                    <button class="btn-cta Placebid">Close Bid</button>
+                </a>
+            {% endif %}
+        </div>
+    </main>
+    <!-- comment section-->
+   <div class="comment-section">
+        <div class="comment-container">
+            <div class="h4 banner-container">
+                Comments and Review of {{ product.Title }}
+            </div>
+        </div>
+       <div class="user-comment">
+           {% if product.Seller != user %}
+               {% if product.comments.all %}
+                   {% for comment in product.comments.all %}
+                       <div class="user-comment-text">
+                           <p class="text-name">{{ comment.user|title }}</p>
+                           <p class="lead">{{ comment.content|title }}</p>
+                       </div>
+                   {% endfor %}
+               {%  else %}
+               {% endif %}
+               <div class="comment-form">
+                   <form method="post" action="{% url 'add_comment' product.id %}">
+                       {% csrf_token %}
+                       <div class="description-holder">
+                           <div class="col-4">
+                               {{ comment_form }}
+                               <span class="focus-border">
+                                   <i></i>
+                               </span>
+                           </div>
+                       </div>
+                       <button class="btn-cta Placebid">Comment</button>
+                   </form>
+               </div>
+           {% else %}
+               {% if product.comments.all %}
+                   {% for comment in product.comments.all %}
+                       <div class="user-comment-text">
+                           <p class="text-name">{{ comment.user|title }}</p>
+                           <p class="lead">{{ comment.content|title }}</p>
+                       </div>
+                   {% endfor %}
+               {%  else %}
+               {% endif %}
+           {% endif %}
+       </div>
+   </div>
+</body>
+</html>

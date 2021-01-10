@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Auctions{% endblock %}</title>
+        <link href="{% static '/auctions/main.css' %}" rel="stylesheet" >
+    </head>
+    <body>
+        <header class="hero-image">
+            <div class="hero-text">
+                <h1>Buy and Sell</h1>
+            </div>
+            <div class="logo-text">
+                <h1>Authentic Items</h1>
+            </div>
+            <a class="logo" href="{% url 'index' %}">Auctions</a>
+            <div class="user">
+                {% if user.is_authenticated %}
+                    Signed in as {{ user.username|title }}
+                {% endif %}
+            </div>
+            <nav>
+                <ul class="nav_links">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'get_watchlist' %}">Watchlist</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                    <a class="square_btn" href="{% url 'createList' %}">Create Listing</a>
+                </ul>
+            </nav>
+        </header>
+        {% block body %}
+        {% endblock %}
+    </body>
+</html>

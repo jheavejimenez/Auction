@@ -1,0 +1,58 @@
+{% load static %}
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Watchlist</title>
+    <link href="{% static '/auctions/main.css' %}" rel="stylesheet" >
+    <link href="{% static '/auctions/productDetail.css' %}" rel="stylesheet" >
+    <link href="{% static '/auctions/create_listing_design.css' %}" rel="stylesheet" >
+</head>
+<body>
+     <header class="nav-bg">
+        <a class="logo" href="{% url 'index' %}">Auctions</a>
+        <nav>
+            <ul class="nav_links">
+                 {% if user.is_authenticated %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                     </li>
+                    {% else %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
+                     </li>
+                 {% endif %}
+                 <a class="square_btn" href="{% url 'createList' %}">Create Listing</a>
+            </ul>
+        </nav>
+    </header>
+    <main class="main-section" style="margin-top: 3em">
+        <h2 class="active">Your Watchlist</h2>
+        <ul class="grid">
+            {% for product in product_watchlist %}
+                <div class="container">
+                    <div class="product tile">
+                        <a href="{% url 'productDetail' product.id %}">
+                            <div class="item-image" style="position: relative;padding-top: 58%;">
+                                <img src="{{ product.itemImage }}" class="product-img product-img2" alt="product image">
+                            </div>
+                            <div class="info-container">
+                                <div class="item-title item-title2">{{ product.Title }}</div>
+                                <div class="info-price">
+                                    <div>
+                                        <div class="price">Starting Bid</div>
+                                        <div class="bid-price">${{ product.startingBid| floatformat:'0' }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>
