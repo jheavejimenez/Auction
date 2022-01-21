@@ -21,10 +21,7 @@ def productDetail(request, id):
     bf = NewBidForm()
     product_item = Listing.objects.get(pk=id)
     if request.user.is_authenticated:
-        if Watchlist.objects.filter(user=request.user, item=id).exists():
-            is_added = True
-        else:
-            is_added = False
+        is_added = bool(Watchlist.objects.filter(user=request.user, item=id).exists())
         return render(request, "auctions/productDetail.html",
                       {
                           'product': product_item,
@@ -51,23 +48,19 @@ def getProductCategory(request, item_category):
 
 
 def login_view(request):
-    if request.method == "POST":
-
-        # Attempt to sign user in
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-
-        # Check if authentication successful
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse("index"))
-        else:
-            return render(request, "auctions/login.html", {
-                "message": "Invalid username and/or password."
-            })
-    else:
+    if request.method != "POST":
         return render(request, "auctions/login.html")
+    # Attempt to sign user in
+    username = request.POST["username"]
+    password = request.POST["password"]
+    user = authenticate(request, username=username, password=password)
+
+    if user is None:
+        return render(request, "auctions/login.html", {
+            "message": "Invalid username and/or password."
+        })
+    login(request, user)
+    return HttpResponseRedirect(reverse("index"))
 
 
 def logout_view(request):
@@ -76,31 +69,30 @@ def logout_view(request):
 
 
 def register(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
-
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        if password != confirmation:
-
-            return render(request, "auctions/register.html", {
-                "msgPasswordError": "Passwords must match."
-            })
-
-        # Attempt to create new user
-        try:
-            user = User.objects.create_user(username, email, password)
-            user.save()
-        except IntegrityError:
-            return render(request, "auctions/register.html", {
-                "msgUsernameError": "Username already taken."
-            })
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
-    else:
+    if request.method != "POST":
         return render(request, "auctions/register.html")
+    username = request.POST["username"]
+    email = request.POST["email"]
+
+    # Ensure password matches confirmation
+    password = request.POST["password"]
+    confirmation = request.POST["confirmation"]
+    if password != confirmation:
+
+        return render(request, "auctions/register.html", {
+            "msgPasswordError": "Passwords must match."
+        })
+
+    # Attempt to create new user
+    try:
+        user = User.objects.create_user(username, email, password)
+        user.save()
+    except IntegrityError:
+        return render(request, "auctions/register.html", {
+            "msgUsernameError": "Username already taken."
+        })
+    login(request, user)
+    return HttpResponseRedirect(reverse("index"))
 
 
 @login_required(login_url='login')
@@ -196,10 +188,9 @@ def take_bid(request, id):
 
 
 def is_valid(offer, listing):
-    if offer >= listing.startingBid and (listing.currentBid is None or offer > listing.currentBid):
-        return True
-    else:
-        return False
+    return offer >= listing.startingBid and (
+        listing.currentBid is None or offer > listing.currentBid
+    )
 
 
 def close_listing(request, id):
